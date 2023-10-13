@@ -25,6 +25,8 @@ export async function GET() {
   }
 }
 
+
+
 export async function POST(request) {
   await connectDb();
   try {
@@ -43,6 +45,7 @@ export async function POST(request) {
       });
     }
 
+    
     async function processImage(image) {
       const bytes = await image.arrayBuffer();
       const buffer = Buffer.from(bytes);
@@ -103,3 +106,4 @@ async function uploadImageToCloudinary(buffer) {
     throw error;
   }
 }
+
