@@ -119,12 +119,12 @@ try{
 
 
 /* Funciona en local */
-/* export async function processImage(image) {
+export async function processImage(image) {
   const bytes = await image.arrayBuffer();
   const buffer = Buffer.from(bytes);
 
   return buffer
   
-} */
+}
 /* Funciona en local */
 
