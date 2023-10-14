@@ -29,7 +29,7 @@ async function savePhotosToLocal(formData) {
 
       
 
-      /* const tempDir = os.tmpdir(); */
+     
       const uploadDir = path.join(tempDir.path, `/${name}.${ext}`);
 
       fs.writeFile(uploadDir, buffer);

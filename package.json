@@ -30,6 +30,7 @@
         "saslprep": "^1.0.3",
         "streamifier": "^0.1.1",
         "tailwindcss": "3.3.2",
+        "temp-dir": "^3.0.0",
         "uuid": "^9.0.0"
     },
     "devDependencies": {
