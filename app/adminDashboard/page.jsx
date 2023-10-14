@@ -119,7 +119,8 @@ function AdminDashboard() {
 
 
     const res = await uploadPhoto(formData)
-    console.log("resSSSS", res)
+    const resText = res.toString()
+    console.log("resSSSS", resText)
 
   }
 
