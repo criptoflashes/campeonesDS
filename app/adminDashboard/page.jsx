@@ -1,8 +1,10 @@
 "use client"
-import axios from "axios";
+
 import { useState, useEffect, useRef } from "react"
 import { useRouter, useParams } from "next/navigation"
-import FormData from "form-data"
+/* import FormData from "form-data" */
+import { uploadPhoto } from "@/actions/uploadActions";
+import ButtonSubmit from "@/components/ButtonSubmit";
 /* import { useCreateProductMutation } from "@/redux/services/productApi"; */
 
 export const dynamic = 'force-dynamic';
@@ -18,17 +20,36 @@ function AdminDashboard() {
     description: ""
   })
 
-  const [file, setFile] = useState()
+
 
   const params = useParams()
   const router = useRouter()
+
+
+
+
+
   const formRef = useRef()
+  const [files, setFiles] = useState([])
 
 
+  async function handleInputFiles(e) {
+    if (e.target.files) {
 
 
+      const files = e.target.files;
+      console.log(files)
+      const newFiles = [...files].filter((file) => {
+        if (file.size < 2000 * 2000) {
+          return file;
+        }
+      })
+
+      setFiles(prev => [...newFiles, ...prev])
 
 
+    }
+  }
   //gettin data to update later
 
   const getProduct = async () => {
@@ -56,7 +77,7 @@ function AdminDashboard() {
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    await createProduct()
+    await handleUpload()
 
   }
 
@@ -73,95 +94,34 @@ function AdminDashboard() {
 
 
   //POST product
-  const createProduct = async () => {
+  async function handleUpload() {
     console.log("eeeeee")
-    try {
-      const formData = new FormData()
-      formData.append("title", newProduct.title);
-      formData.append("category", newProduct.category)
-      formData.append("description", newProduct.description)
-
-      if (file) {
-
-        formData.append("image", file)
-        console.log("entro")
-      }
-
-      if (!params.id) {
-        console.log("0000")
-                const result = await fetch("api/products", {
-                  method: "POST",
-                  body: formData,
-                }).then(res => console.log("vvvvvvvv",res) )
-/* const data = await result.json()
-console.log(data) */
-        /* const data = await result.json();
-        console.log(data.secure_url) */
-
-     /*    const result = await axios.post("https://campeones-del-sur.vercel.app/api/products", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data"
-          }
-        }) */
-        
-        /* console.log(result)  *//* .then(res => res.json()) */
-      } else {
-
-        const res = await axios.put("/api/products/" + params.id, formData, {
-          headers: {
-            "Content-Type": "multipart/form-data"
-          }
-        }).then(res => res.text())
-
-        console.log("paso", res)
-      }
-
-      formRef.current.reset(); 
-
-      router.refresh()
-       router.push('/adminProducts')
-     
 
 
-    } catch (error) {
-      if (error.response && error.response.data) {
-        console.log(error)
-        // Mostrar el error de Cloudinary en la consola o en la interfaz de usuario
-        console.error("Error de Cloudinary:", error.response.data.error);
-      } else {
-        // Manejar otros errores
-        console.log(error)
-        console.error("Error:", error);
-      }
-    }
+
+
+    if (!files.length) return alert('No image files are selected')
+
+
+
+    const formData = new FormData()
+    formData.append("title", newProduct.title);
+    formData.append("category", newProduct.category)
+    formData.append("description", newProduct.description)
+
+    files.forEach(file => {
+      formData.append("file", file)
+      console.log("entro")
+
+    })
+
+
+
+
+    const res = await uploadPhoto(formData)
+    console.log(res)
+
   }
-
-
-  
-  
-  const handleDelete = async () => {
-    if (window.confirm("¿Estás seguro de borrar este producto?")) {
-      try {
-        const res = await fetch(`/api/products/${params.id}`, {
-          method: "DELETE",
-        })
-        router.refresh()
-        router.push('/adminProducts')
-
-        console.log(res)
-      } catch (error) {
-        console.log(error)
-        router.refresh()
-        router.push('/adminProducts')
-
-      }
-    }
-  }
-
-
-
-
-
 
 
 
@@ -171,15 +131,15 @@ console.log(data) */
     <div>
       <div className="h-screen flex justify-center items-center">
 
-        <form action="" onSubmit={handleSubmit} ref={formRef}>
+        <form action={handleUpload} /* onSubmit={handleSubmit} */ ref={formRef}>
           <header className="flex justify-between">
 
             <h1 className="font-bold text-3xl">{
               !params.id ? "Crea un producto" : "Edita un producto"
             }</h1>
-            <button type="button" className="bg-red-500 px-3 rounded-md" onClick={handleDelete}>
+            {/*             <button type="button" className="bg-red-500 px-3 rounded-md" onClick={handleDelete}>
               Borrar producto
-            </button>
+            </button> */}
 
 
           </header>
@@ -203,10 +163,11 @@ console.log(data) */
 
           <input
             type="file"
+            accept="image/*"
+            multiple
             className="shadow appearance-none border rounded w-full py-2 px-3 mb-2"
-            onChange={(e) => {
-              setFile(e.target.files[0]);
-            }}
+            onChange={handleInputFiles}
+
           />
 
 
@@ -218,19 +179,24 @@ console.log(data) */
             !params.id ? "Create" : "Update"
 
           }</button>
+
+          <ButtonSubmit value="Upload" />
+
+
         </form>
       </div>
 
 
       {/* preview images */}
       <div className="flex justify-center items-center pb-3">
-        {file && (
+        {files && files?.map(file => (
           <img
             className="w-96 object-contain mx-auto my-4"
             src={URL.createObjectURL(file)}
             alt=""
+            key={file.name}
           />
-        )}
+        ))}
       </div>
 
     </div>
