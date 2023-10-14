@@ -34,7 +34,7 @@ async function IndexPage() {
         </h2>
       </div>
       <MainContentHome />
-      <h1>All photos {photos.map(ph => <p>{ph.secure_url}</p>)}</h1>
+      <h1>All photos {photos.map(ph => <p key={ph.secure_url}>{ph.secure_url}</p>)}</h1>
 
       {/* <Users users={users} /> */}
     </div>
