@@ -18,7 +18,7 @@ import MainContentHome from "components/MainContentHome";
 async function IndexPage() {
   /*  const users = await fetchUsers(); */
   /* const photos = await getAllPhotos() */
-  console.log(photos)
+  /* console.log(photos) */
   return (
     <div className="flex flex-col place-content-center px-10 ">
       <Hero />
