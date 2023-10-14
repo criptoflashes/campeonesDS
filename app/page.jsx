@@ -5,6 +5,8 @@ import MainContentHome from "components/MainContentHome";
 /* import Image from "next/image"; */
 
 //REact Server Component
+
+
 //esta función la voy a ejecutar  desde el servidor, el método fetch se usa en el front como el back
 //estos datos se ejecutan desde el servidor y no en el front end es por eso que lo veré en la consola del vsc y no en la del navegador
 /* async function fetchUsers() {
