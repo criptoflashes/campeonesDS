@@ -80,7 +80,7 @@ export async function uploadPhoto(formData) {
 }
 
 
-/* export async function getAllPhotos() {
+export async function getAllPhotos() {
   
    try {
      
@@ -92,4 +92,4 @@ return resources
      return { errMsg: error.message };
    }
  }
-  */
+ 
