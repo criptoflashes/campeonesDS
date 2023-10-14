@@ -5,6 +5,8 @@ import { v4 as uuidv4 } from "uuid";
 import os from "os";
 import { v2 as cloudinary} from "cloudinary";
 import { revalidatePath } from "next/cache";
+import { createTempDirectory } from "create-temp-directory";
+
 
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
@@ -15,18 +17,23 @@ cloudinary.config({
 async function savePhotosToLocal(formData) {
   const files = formData.getAll("file");
   /*    console.log(files) */
+  
+   const tempDir = await createTempDirectory();
 
+  
   const multipleBuffersPromise = files.map((file) =>
     file.arrayBuffer().then((data) => {
       const buffer = Buffer.from(data);
       const name = uuidv4();
       const ext = file.type.split("/")[1];
 
-      const tempDir = os.tmpdir();
-      const uploadDir = path.join(tempDir, `/${name}.${ext}`);
+      
+
+      /* const tempDir = os.tmpdir(); */
+      const uploadDir = path.join(tempDir.path, `/${name}.${ext}`);
 
       fs.writeFile(uploadDir, buffer);
-
+      console.log(uploadDir)
       return { filepath: uploadDir, filename: file.name };
     })
   );
@@ -48,12 +55,16 @@ async function uploadPhotosToCloudinary(newFiles) {
 export async function uploadPhoto(formData) {
   /* console.log(formData);
  */
+
+
   try {
     const newFiles = await savePhotosToLocal(formData);
 
     /* console.log(newFiles); */
     const photos = await uploadPhotosToCloudinary(newFiles);
     console.log("photoss", photos);
+
+
 
     newFiles.map((file) => fs.unlink(file.filepath));
 
