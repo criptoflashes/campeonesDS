@@ -59,17 +59,17 @@ export async function uploadPhoto(formData) {
 
     return { msg: "upload sucess!" };
    
-
+ 
     revalidatePath("/");
 
 
   } catch (error) {
-    return { errMsg: error.message };
+    return { errMsg:  error.message };
   }
 }
 
 
-export async function getAllPhotos() {
+/* export async function getAllPhotos() {
   
    try {
      
@@ -81,4 +81,4 @@ return resources
      return { errMsg: error.message };
    }
  }
- 
+  */
