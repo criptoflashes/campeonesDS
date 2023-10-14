@@ -60,7 +60,8 @@ export async function uploadPhoto(formData) {
 
     /* console.log(newFiles); */
     const photos = await uploadPhotosToCloudinary(newFiles);
-    console.log("photoss", photos);
+    const str =  JSON.stringify(photos)
+    console.log("photoss", str);
 
     newFiles.map((file) => fs.unlink(file.filepath));
 
