@@ -25,7 +25,10 @@ async function savePhotosToLocal(formData) {
       const name = uuidv4();
       const ext = file.type.split("/")[1];
 
-      const uploadDir = path.join(tempDir.path, `/${name}.${ext}`);
+
+      const tempdir = os.tmpdir()
+      /* const uploadDir = path.join(tempDir.path, `/${name}.${ext}`); */
+      const uploadDir = path.join(tempdir, `/${name}.${ext}`);
 
       fs.writeFile(uploadDir, buffer);
       console.log(uploadDir);
